@@ -15,6 +15,10 @@ block content
     console.log(typeof highscore);
     console.log(typeof localStorage.getItem("localHighscore"));
 
+    //$("#points").text()
+    console.log($("#points").text());
+    console.log(typeof $("#points").text());
+
     document.getElementById("highscore").innerHTML = `Personal highscore: ${highscore}`;
 
     var addPoint = function() {
