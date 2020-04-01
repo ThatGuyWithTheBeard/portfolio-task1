@@ -1,0 +1,32 @@
+extends layout
+
+block content
+  h1= game
+  p Welcome #{userName}
+  ul
+    li#health Health: #{healthPoints}
+    li#points Points: #{points}
+    li#highscore 0
+    li#status Status: #{status}
+  script.
+    let points = 0;
+    const highscore = parseInt(localStorage.getItem("localHighscore"));
+
+    console.log(typeof highscore);
+    console.log(typeof localStorage.getItem("localHighscore"));
+
+    document.getElementById("highscore").innerHTML = `Personal highscore: ${highscore}`;
+
+    var addPoint = function() {
+      points += 1;
+      console.log(points);
+      document.getElementById("points").innerHTML = `Points: ${points}`;
+
+      if(highscore < points)
+        localStorage.setItem("localHighscore", points);
+      
+        
+    }
+
+  button(onclick="something()") Click
+  button(onClick="addPoint()") Press X to Jason
