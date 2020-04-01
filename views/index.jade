@@ -6,16 +6,16 @@ block content
   ul
     li#health Health: #{healthPoints}
     li#points Points: #{points}
-    li#highscore 0
+    li#highscore Highscore: 0
     li#status Status: #{status}
-  script.
+  //script.
     let points = 0;
     const highscore = parseInt(localStorage.getItem("localHighscore"));
 
     console.log(typeof highscore);
     console.log(typeof localStorage.getItem("localHighscore"));
 
-    //$("#points").text()
+    $("#points").text()
     console.log($("#points").text());
     console.log(typeof $("#points").text());
 
@@ -32,5 +32,5 @@ block content
         
     }
 
-  button(onclick="something()") Click
+  button(onclick="resetHighscore()") Reset highscore
   button(onClick="addPoint()") Press X to Jason
