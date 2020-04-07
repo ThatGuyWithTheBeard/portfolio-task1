@@ -6,6 +6,7 @@ const data = require("../data.json");
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
+  //res.render("index", data);
   res.render("index", data);
 
   /* fs.readFile("../views/index.jade", null, (error, data) => {

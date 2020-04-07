@@ -8,29 +8,12 @@ block content
     li#points Points: #{points}
     li#highscore Highscore: 0
     li#status Status: #{status}
-  //script.
-    let points = 0;
-    const highscore = parseInt(localStorage.getItem("localHighscore"));
-
-    console.log(typeof highscore);
-    console.log(typeof localStorage.getItem("localHighscore"));
-
-    $("#points").text()
-    console.log($("#points").text());
-    console.log(typeof $("#points").text());
-
-    document.getElementById("highscore").innerHTML = `Personal highscore: ${highscore}`;
-
-    var addPoint = function() {
-      points += 1;
-      console.log(points);
-      document.getElementById("points").innerHTML = `Points: ${points}`;
-
-      if(highscore < points)
-        localStorage.setItem("localHighscore", points);
-      
-        
-    }
 
   button(onclick="resetHighscore()") Reset highscore
   button(onClick="addPoint()") Press X to Jason
+  
+  br
+  br
+  
+  input#command-input(type="text", name=`${userName}`)
+  button#submit-btn(onClick="getDirection()") Submit command
