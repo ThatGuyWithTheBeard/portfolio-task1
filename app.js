@@ -4,10 +4,36 @@ var path = require('path');
 //var cookieParser = require('cookie-parser');
 //var logger = require('morgan');
 
+let socket = require("socket.io");
+
+
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 
 var app = express();
+
+
+// Server
+let server = app.listen(4000, () => {
+  console.log("Listening to requests on port 4000\n");
+});
+
+// Socket setup
+let io = socket(server);
+
+io.on("connection", (socket) => {
+
+  console.log("Made socket connection.", socket.id);
+  
+  socket.on("chat", (data) => {
+
+    io.sockets.emit("chat", data);
+    console.log(data);
+    
+  });
+  
+});
+
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));

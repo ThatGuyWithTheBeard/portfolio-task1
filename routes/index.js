@@ -5,9 +5,9 @@ const data = require("../data.json");
 //const fs = require("fs");
 
 /* GET home page. */
-router.get('/', function(req, res, next) {
+router.get('/', function(request, response, next) {
   //res.render("index", data);
-  res.render("index", data);
+  response.render("index", data);
 
   /* fs.readFile("../views/index.jade", null, (error, data) => {
 
@@ -23,5 +23,17 @@ router.get('/', function(req, res, next) {
 });
 
 router.put("/",)
+
+router.get("/login", (request, response, next) => {
+
+  response.render("login");
+  
+})
+
+router.get("/chat", (request, response, next) =>{
+
+  response.render("chat");
+  
+});
 
 module.exports = router;
