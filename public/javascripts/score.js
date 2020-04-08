@@ -3,7 +3,15 @@
 let highscore;
 let points = 0;
 let currentRoom = 0;
-let rooms = [0, 1, 2];
+
+let rooms = {
+
+    0: true,
+    1: false,
+    2: false,
+
+};
+
 let direction = "";
 
 const nonDigit = /\D+/g;
@@ -68,7 +76,11 @@ const resetHighscore = () => {
 
 }
 
-const moveRoom = (direction) => {
+const moveRoom = () => {
+    
+}
+
+const moveRoom_old = (direction) => {
 
     const MOVE_FORWARD = "forward";
     const MOVE_BACK = "back";
