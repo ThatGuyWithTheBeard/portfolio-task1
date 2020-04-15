@@ -1,7 +1,19 @@
 {
-    "game": "Rainbow Road",
-    "userName": "IAmTheBeard",
-    "healthPoints": 10,
-    "status": "Your ass is facing north",
-    "points": 0
+    "users": [
+        {
+            "id": "",
+            "name": "IAmTheBeard",
+            "password": ""
+        },
+        {
+            "id": "",
+            "name": "IAmTheBeard",
+            "password": ""
+        },
+        {
+            "id": "",
+            "name": "IAmTheBeard",
+            "password": ""
+        }
+    ]
 }
