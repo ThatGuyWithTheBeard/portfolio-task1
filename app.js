@@ -1,21 +1,24 @@
-var createError = require('http-errors');
-var express = require('express');
-var path = require('path');
+const createError = require('http-errors');
+const express = require('express');
+const bodyParser = require("body-parser");
+const path = require('path');
+
 //var cookieParser = require('cookie-parser');
 //var logger = require('morgan');
 
 let socket = require("socket.io");
 
 
-var indexRouter = require('./routes/index');
-var usersRouter = require('./routes/users');
+const indexRouter = require('./routes/index');
+const usersRouter = require('./routes/users');
 
+// Setting up server
 var app = express();
 
+let port = process.env.port || 4000;
 
-// Server
-let server = app.listen(4000, () => {
-  console.log("Listening to requests on port 4000\n");
+let server = app.listen(port, () => {
+  console.log(`Listening to requests on port ${port}\n`);
 });
 
 // Socket setup
@@ -31,6 +34,10 @@ io.on("connection", (socket) => {
     console.log(data);
     
   });
+
+  socket.on("typing", (data) => {
+    socket.broadcast.emit("typing", data);
+  });
   
 });
 
@@ -44,6 +51,8 @@ app.set('view engine', 'jade');
 //app.use(express.urlencoded({ extended: false }));
 //app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
+
+app.use(bodyParser.json());
 
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
