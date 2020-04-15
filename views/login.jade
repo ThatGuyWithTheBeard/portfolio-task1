@@ -1,13 +1,13 @@
 extend layout
 
 block content
-    //script(src="/login.js")
+    script(src="/javascripts/login.js")
     h1 Please login or register a new user
   
     br
     br
   
-    input#username-input(type="text", placeholder="Username")
-    input#password-input(type="text", placeholder="Password")
-    button#login-submit.btn() Login
-    button#register-user.btn() Register user
+    input#username(type="text", placeholder="Username")
+    input#password(type="text", placeholder="Password")
+    button#login.btn() Login
+    button#register.btn() Register user
