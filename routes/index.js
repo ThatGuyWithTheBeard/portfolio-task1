@@ -1,13 +1,21 @@
-var express = require('express');
+const express = require('express');
 var router = express.Router();
 //import data from "../data.json";
-const data = require("../data.json");
+//const data = require("../data.json");
 //const fs = require("fs");
 
+
+// Get 
+router.get("/", (req, res) => {
+
+  res.redirect("/login");
+  
+});
+
 /* GET home page. */
-router.get('/', function(request, response, next) {
+router.get('/index', (req, res) => {
   //res.render("index", data);
-  response.render("index", data);
+  res.render("index"/* , data */);
 
   /* fs.readFile("../views/index.jade", null, (error, data) => {
 
@@ -22,17 +30,44 @@ router.get('/', function(request, response, next) {
 
 });
 
-router.put("/",)
+/* router.post("/", (request, response) => {
+  
+  response.send({ type: "POST" });
+  
+});
 
-router.get("/login", (request, response, next) => {
+router.put("/", (request, response) => {
+  
+  response.send({ type: "PUT" });
+  
+});
 
-  response.render("login");
+router.delete("/", (request, response) => {
+  
+  response.send({ type: "DELETE" });
+  
+}); */
+
+router.get("/login", (req, res) => {
+
+  res.render("login");
   
 })
 
-router.get("/chat", (request, response, next) =>{
+router.post("/login", (req, res) => {
 
-  response.render("chat");
+  console.log(req.body);
+  res.send({ 
+    type: "POST",
+    username: req.body.username,
+    password: req.body.password
+  })
+  
+})
+
+router.get("/chat", (req, res) =>{
+
+  res.render("chat");
   
 });
 
