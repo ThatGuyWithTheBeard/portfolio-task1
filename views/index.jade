@@ -1,10 +1,12 @@
 extends layout
 
 block content
-  h1= game
-  p Welcome #{userName}
+  script(src="/javascripts/score.js")
+
+  h1#game Game:
+  p#name Welcome #{name}
   ul
-    li#health Health: #{healthPoints}
+    li#health Health: #{health}
     li#points Points: #{points}
     li#highscore Highscore: 0
     li#status Status: #{status}
