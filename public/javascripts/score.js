@@ -34,6 +34,8 @@ $().ready(() => {
         
         console.log(direction);
 
+        console.log();
+
     });
     
     
@@ -126,19 +128,10 @@ const moveRoom_old = (direction) => {
 
 }
 
-const getDirection = () => {
+const moveForward = () => {
 
-    let direction = "";
+}
 
-    /* $("#submit-btn").click((event) => {
+const moveBackward = () => {
 
-        event.preventDefault();
-        direction = $("#command-input").val();
-        
-    }); */
-    //console.log(direction);
-    
-    //moveRoom(direction);
-
-    
 }
