@@ -1,7 +1,5 @@
-//const fs = require("fs");
 
 let highscore;
-let points = 0;
 
 let rooms = [
     {
@@ -28,6 +26,28 @@ const nonDigit = /\D+/g;
 const digit = /\d+/g;
 
 $().ready(() => {
+
+    let request = $.ajax({
+        method: "GET",
+        url: "/data",
+        dataType: "json"
+    });
+
+    request.done((data) => {
+
+        let { game, name, health, status, points } = data;
+
+        $("#game").text(`Game: ${game}`);
+        $("#name").text(`Welcome ${name}`);
+        $("#health").text(`Health: ${health}`);
+        $("#points").text(`Points: ${points}`);
+        $("#status").text(`Status: ${status}`);
+
+    });
+
+    request.fail((jqXHR, textStatus) => {
+        console.log("Request failed: " + textStatus);
+    })
 
     highscore = parseInt(localStorage.getItem("localHighscore"));
 
