@@ -2,6 +2,7 @@ const createError = require('http-errors');
 const express = require('express');
 const bodyParser = require("body-parser");
 const path = require('path');
+const mongoose = require("mongoose");
 
 //var cookieParser = require('cookie-parser');
 //var logger = require('morgan');
@@ -13,7 +14,11 @@ const indexRouter = require('./routes/index');
 const usersRouter = require('./routes/users');
 
 // Setting up server
-var app = express();
+const app = express();
+
+// Connect to MongoDB
+mongoose.connect("mongodb://localhost/game");
+mongoose.Promise = global.Promise;
 
 let port = process.env.port || 4000;
 

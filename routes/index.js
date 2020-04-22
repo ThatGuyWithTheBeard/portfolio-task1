@@ -3,6 +3,7 @@ var router = express.Router();
 //import data from "../data.json";
 //const data = require("../data.json");
 //const fs = require("fs");
+const User = require("../models/user");
 
 
 // Get 
@@ -55,13 +56,12 @@ router.get("/login", (req, res) => {
 })
 
 router.post("/login", (req, res) => {
+  //console.log(req.body);
 
-  console.log(req.body);
-  res.send({ 
-    type: "POST",
-    username: req.body.username,
-    password: req.body.password
-  })
+  User.create(req.body).then((user) => {
+    res.send(user);
+  });
+
   
 })
 
