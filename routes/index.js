@@ -7,28 +7,18 @@ const User = require("../models/user");
 
 
 // Get 
-router.get("/", (req, res) => {
+router.get("/", (req, res, next) => {
 
   res.redirect("/login");
   
 });
 
 /* GET home page. */
-router.get('/index', (req, res) => {
+
+// FIXME Update GET requests to be the same as in "task1"
+router.get('/index', (req, res, next) => {
   //res.render("index", data);
   res.render("index"/* , data */);
-
-  /* fs.readFile("../views/index.jade", null, (error, data) => {
-
-    if(error) {
-      console.log("There was an error!");
-      throw error;
-    } else {
-      res.render(data);
-    }
-
-  }) */
-
 });
 
 /* router.post("/", (request, response) => {

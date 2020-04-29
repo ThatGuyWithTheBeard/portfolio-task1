@@ -40,6 +40,7 @@ $().ready(() => {
 
     $("#highscore").text(`Highscore: ${highscore}`);
 
+    // FIXME Update functions with AJAX requests so they're the same as in "task1"
     $("#submit-btn").click((event) => {
 
         //event.preventDefault();
