@@ -66,7 +66,7 @@ app.use('/users', usersRouter);
 
 // Error handling middleware (needs to be last)
 app.use((err, req, res, next) => {
-  console.error("Calling custom error handler");
+  console.error(err);
 
   res.status(422).send({
     error: err.message
