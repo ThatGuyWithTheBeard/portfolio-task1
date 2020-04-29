@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const Ninja = require("../models/user");
+const User = require("../models/user");
 
 /* GET users listing. */
 router.get('/', function(req, res, next) {
@@ -10,9 +10,14 @@ router.get('/', function(req, res, next) {
   });
 });
 router.post('/', function(req, res, next) {
-  Ninja.create(req.body).then((ninja) => { // TODO This could be easier to read with async/await
-    res.send(ninja);
+  
+  console.log("POST at /users triggered");
+  //console.log(req.body);
+  User.create(req.body).then((user) => { // TODO This could be easier to read with async/await
+    res.json(user);
   }).catch(next);
+
+  res.end(req.body);
 
 });
 
