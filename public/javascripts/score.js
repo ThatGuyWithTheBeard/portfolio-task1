@@ -89,69 +89,46 @@ const resetHighscore = () => {
 
 }
 
-const moveRoom = () => {
+const moveRoom = (command) => {
     
-}
+    let currentRoom = rooms.filter(room => room.isInRoom === true)[0];
 
-const moveRoom_old = (direction) => {
-
-    const MOVE_FORWARD = "forward";
-    const MOVE_BACK = "back";
-
-    switch(direction) {
-        case MOVE_FORWARD:
-
-            if(currentRoom + 1 < rooms[rooms.length - 1]) {
-                currentRoom += 1;
-                $("#status").text(`Moved succesfully! You're now in room ${currentRoom}.`);
-            } else {
-
-                $("#status").text(`You can't move that way. You're in room ${currentRoom}.`);
-
-            }
+    const FORWARD = "forward";
+    const BACK = "back";
+    
+    switch(command) {
+        case FORWARD:
             
-            console.log("MOVE_FORWARD activated.");
+            if(currentRoom.number < rooms.length - 1) {
+                
+                rooms[currentRoom.number].isInRoom = false;
+                rooms[currentRoom.number + 1].isInRoom = true;
+                console.log(`You move forward into ${rooms[currentRoom.number + 1].name}`);
 
-        break;
-
-        case MOVE_BACK:
-
-            if(rooms[0] < currentRoom) {
-                currentRoom -= 1;
-                $("#status").text(`Moved succesfully! You're now in room ${currentRoom}.`);
-            } else {
-
-                $("#status").text(`You can't move that way. You're in room ${currentRoom}.`);
-
-            }
+            } else
+                console.log(`You can't move forward here`);
             
-            console.log("MOVE_BACK activated.");
+            break;
 
-        break;
+        case BACK:
+
+            if(currentRoom.number > 0) {
+
+                rooms[currentRoom.number].isInRoom = false;
+                rooms[currentRoom.number - 1].isInRoom = true;
+                console.log(`You move back into ${rooms[currentRoom.number - 1].name}`);
+                
+            } else
+                console.log(`You can't move back any further`);
+
+            break;
 
         default:
 
-            console.log("Default triggered.")
-            
-        break;
+            console.log(`The command "${command}" is not recognized`)
+        
+            break;
 
     }
 
-}
-
-const getDirection = () => {
-
-    let direction = "";
-
-    /* $("#submit-btn").click((event) => {
-
-        event.preventDefault();
-        direction = $("#command-input").val();
-        
-    }); */
-    //console.log(direction);
-    
-    //moveRoom(direction);
-
-    
 }
