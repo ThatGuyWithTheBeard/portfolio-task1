@@ -4,13 +4,26 @@ let highscore;
 let points = 0;
 let currentRoom = 0;
 
-let rooms = {
-
-    0: true,
-    1: false,
-    2: false,
-
-};
+let rooms = [
+    {
+        number: 0,
+        name: "room 1 AKA start room",
+        description: "there's a painting on the wall",
+        isInRoom: true
+    },
+    {
+        number: 1,
+        name: "room 2 AKA middle room",
+        description: "this rooms has nothing interesting in it",
+        isInRoom: false
+    },
+    {
+        number: 2,
+        name: "room 3 AKA the final room",
+        description: "there's a pit in front of you. You can't go any further",
+        isInRoom: false
+    }
+];
 
 let direction = "";
 
