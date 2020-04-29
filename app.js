@@ -17,7 +17,7 @@ const usersRouter = require('./routes/users');
 const app = express();
 
 // Connect to MongoDB
-mongoose.connect("mongodb://localhost/game");
+mongoose.connect("mongodb://localhost/textgame");
 mongoose.Promise = global.Promise;
 
 let port = process.env.port || 4000;
@@ -51,10 +51,12 @@ io.on("connection", (socket) => {
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
 
+// TODO Check if these middlewares are needed. Remove them if not.
 //app.use(logger('dev'));
 //app.use(express.json());
 //app.use(express.urlencoded({ extended: false }));
 //app.use(cookieParser());
+
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use(bodyParser.json());
@@ -62,6 +64,18 @@ app.use(bodyParser.json());
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
 
+// Error handling middleware (needs to be last)
+app.use((err, req, res, next) => {
+  console.error("Calling custom error handler");
+
+  res.status(422).send({
+    error: err.message
+  });
+
+});
+
+
+/* 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
   next(createError(404));
@@ -76,6 +90,6 @@ app.use(function(err, req, res, next) {
   // render the error page
   res.status(err.status || 500);
   res.render('error');
-});
+}); */
 
 module.exports = app;
