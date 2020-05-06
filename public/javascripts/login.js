@@ -21,8 +21,6 @@ $().ready(() => {
         console.log(typeof(username), typeof(password));
         console.log("Login clicked");
         
-        // FIXME Make POST send to database
-        // BUG POST sends empty objects instead of data
         $.ajax({
             method: "POST", 
             url: "/users",
