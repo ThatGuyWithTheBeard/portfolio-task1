@@ -45,16 +45,6 @@ router.get("/login", (req, res) => {
   
 })
 
-router.post("/login", (req, res) => {
-  //console.log(req.body);
-
-  User.create(req.body).then((user) => {
-    res.send(user);
-  });
-
-  
-})
-
 router.get("/chat", (req, res) =>{
 
   res.render("chat");

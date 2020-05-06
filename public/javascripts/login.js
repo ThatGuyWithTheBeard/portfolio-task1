@@ -18,27 +18,24 @@ $().ready(() => {
         username = $("#username").val();
         password = $("#password").val();
         console.log(username, password);
+        console.log(typeof(username), typeof(password));
         console.log("Login clicked");
         
-        let data = JSON.stringify({
-            name: username,
-            password: password
-        })
-
-        console.log(data);
-
         // FIXME Make POST send to database
         // BUG POST sends empty objects instead of data
         $.ajax({
             method: "POST", 
             url: "/users",
-            data: data,
-            dataType: "json"
+            contentType: "application/json",
+            data: JSON.stringify({
+                name: username,
+                password: password
+            }),
+            //dataType: "json"
             
         }).catch((err) => {
             console.log(err);
         }).done((data) => {
-            console.log(data);
             console.log("Tried POST", data);
         });
     });

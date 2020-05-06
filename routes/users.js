@@ -9,15 +9,15 @@ router.get('/', function(req, res, next) {
     data: "GET from /users"
   });
 });
-router.post('/', function(req, res, next) {
+router.post('/', function(req, res, next) { // localhost:4000/users
   
   console.log("POST at /users triggered");
-  //console.log(req.body);
+  console.log(req.body);
   User.create(req.body).then((user) => { // TODO This could be easier to read with async/await
     res.json(user);
   }).catch(next);
 
-  res.end(req.body);
+  //res.json(req.body);
 
 });
 
