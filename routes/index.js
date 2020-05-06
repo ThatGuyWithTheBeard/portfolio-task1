@@ -9,7 +9,8 @@ const User = require("../models/user");
 // Get 
 router.get("/", (req, res, next) => {
 
-  res.redirect("/login");
+  //res.redirect("/login");
+  res.render("landing-page");
   
 });
 
@@ -19,6 +20,26 @@ router.get("/", (req, res, next) => {
 router.get('/index', (req, res, next) => {
   //res.render("index", data);
   res.render("index"/* , data */);
+});
+
+
+
+router.get("/login", (req, res) => {
+
+  res.render("login");
+  
+})
+
+router.get("/register", (req, res) => {
+
+  res.render("register");
+  
+})
+
+router.get("/chat", (req, res) =>{
+
+  res.render("chat");
+  
 });
 
 /* router.post("/", (request, response) => {
@@ -38,17 +59,5 @@ router.delete("/", (request, response) => {
   response.send({ type: "DELETE" });
   
 }); */
-
-router.get("/login", (req, res) => {
-
-  res.render("login");
-  
-})
-
-router.get("/chat", (req, res) =>{
-
-  res.render("chat");
-  
-});
 
 module.exports = router;
