@@ -17,7 +17,7 @@ const usersRouter = require('./routes/users');
 const app = express();
 
 // Connect to MongoDB
-mongoose.connect("mongodb://localhost/textgame");
+mongoose.connect("mongodb://localhost/textgame", { useNewUrlParser: true, useUnifiedTopology: true }); // MongoClient.connect(url, {useNewUrlParser: true } )
 mongoose.Promise = global.Promise;
 
 let port = process.env.port || 4000;
@@ -60,7 +60,6 @@ app.set('view engine', 'jade');
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use(bodyParser.json());
-
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
 
