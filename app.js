@@ -17,7 +17,11 @@ const usersRouter = require('./routes/users');
 const app = express();
 
 // Connect to MongoDB
-mongoose.connect("mongodb://localhost/textgame", { useNewUrlParser: true, useUnifiedTopology: true }); // MongoClient.connect(url, {useNewUrlParser: true } )
+mongoose.connect("mongodb://localhost/textgame", { 
+  useNewUrlParser: true, 
+  useUnifiedTopology: true,
+  useCreateIndex: true
+}); // MongoClient.connect(url, {useNewUrlParser: true } )
 mongoose.Promise = global.Promise;
 
 let port = process.env.port || 4000;
