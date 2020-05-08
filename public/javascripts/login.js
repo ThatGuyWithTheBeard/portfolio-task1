@@ -18,7 +18,6 @@ $().ready(() => {
         username = $("#username").val();
         password = $("#password").val();
         console.log(username, password);
-        console.log(typeof(username), typeof(password));
         console.log("Login clicked");
         
         $.ajax({
@@ -29,24 +28,18 @@ $().ready(() => {
                 name: username,
                 password: password
             }),
-            //dataType: "json"
+            error: (err) => {
+                console.log(err);
+                //$("#message").append(`<div class="error">${err.statusText}</div>`);
+                $("#message").append(`<div class="error">${err.responseJSON.message}</div>`);
+            },
+            success: (data) => {
+                console.log("Tried POST to login", data);
+                $("#message").append(`<div class="data">Password accepted</div>`);
+    
+                location.href = "/index";
+            }
             
-        }).catch((err) => { // FIXME This doens't trigger like expected. It seems like there's not an error to catch from the server right now.
-            console.log(err);
-            $("#message").append(`<div class="error">${err.statusText}</div>`);
-            //$("#message").append(`<div class="error">${err.responseJSON.error}</div>`);
-        }).done((data) => {
-            console.log("Tried POST to login", data);
-            $("#message").append(`<div class="data">Password accepted</div>`);
-
-            location.href = "/index";
         });
     });
-    
-    /* .catch((err) => {
-        console.log(err);
-    }).done((data) => {
-        console.log("Tried POST to register", data);
-    }); */
-
 });
