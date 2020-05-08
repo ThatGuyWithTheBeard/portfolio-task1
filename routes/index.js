@@ -18,8 +18,7 @@ router.get("/", (req, res, next) => {
 
 // FIXME Update GET requests to be the same as in "task1"
 router.get('/index', (req, res, next) => {
-  //res.render("index", data);
-  res.render("index"/* , data */);
+  res.render("index");
 });
 
 

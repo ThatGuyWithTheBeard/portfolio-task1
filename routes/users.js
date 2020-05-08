@@ -4,21 +4,46 @@ const User = require("../models/user");
 
 /* GET users listing. */
 router.get('/', function(req, res, next) {
-  res.send({
-    type: "GET",
-    data: "GET from /users"
-  });
+
 });
-router.post('/', function(req, res, next) { // localhost:4000/users
+
+router.post('/login', function(req, res, next) { // localhost:4000/users
   
-  console.log("POST at /users triggered");
+  console.log("POST to /users/login triggered");
   console.log(req.body);
+
+  User.findOne({ name: req.body.name }, (err, user) => {
+    
+    console.log(user);
+    console.log(user.name);
+    console.log(user.get("name"));
+    console.log(req.body.name);
+
+    if(err) {
+      console.log(err);
+      res.send(err);
+    }
+
+    // FIXME Missing an error handler or something else that denotes that no object was found in the database
+    if(user !== null) {
+      if(req.body.name === user.get("name") && req.body.password === user.get("password")) {
+        console.log(`Name "${user.get("name")}" and password "${user.get("password")}" match!`);
+        res.send(user);
+      } else {
+        console.log(`Name "${user.get("name")}" and password "${user.get("password")}" don't match!`);
+      }
+    }
+
+  }).catch(next);
+});
+
+router.post("/register", (req, res, next) => {
+
+  console.log("POST to /users/register triggered");
+
   User.create(req.body).then((user) => { // TODO This could be easier to read with async/await
     res.json(user);
   }).catch(next);
-
-  //res.json(req.body);
-
 });
 
 module.exports = router;
