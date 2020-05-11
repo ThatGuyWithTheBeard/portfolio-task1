@@ -9,11 +9,11 @@ block content
     li#highscore Highscore: 0
     li#status Status: #{status}
 
-  button(onclick="resetHighscore()") Reset highscore
-  button(onClick="addPoint()") Press X to Jason
+  button#reset-points Reset highscore
+  button#add-point Add point
   
   br
   br
   
-  input#command-input(type="text", name=`${userName}`)
-  button#submit-btn(onClick="getDirection()") Submit command
+  input#command-input(type="text")
+  button#submit-btn Submit command
