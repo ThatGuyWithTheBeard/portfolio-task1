@@ -12,9 +12,17 @@ const UserSchema = new Schema({
         type: String,
         required: [true, "Password required"]
     },
-    available: {
-        type: Boolean,
-        default: false
+    health: {
+        type: Number,
+        default: 0
+    },
+    points: {
+        type: Number,
+        default: 0
+    },
+    highscore: {
+        type: Number,
+        default: 0
     }
 });
 
