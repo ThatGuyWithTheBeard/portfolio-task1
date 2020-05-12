@@ -14,7 +14,7 @@ const UserSchema = new Schema({
     },
     health: {
         type: Number,
-        default: 0
+        default: 10
     },
     points: {
         type: Number,
@@ -23,6 +23,10 @@ const UserSchema = new Schema({
     highscore: {
         type: Number,
         default: 0
+    },
+    room: {
+        type: Number,
+
     }
 });
 
