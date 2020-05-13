@@ -1,14 +1,14 @@
 extends layout
 
 block content
-  script(src="javascripts/game.js")
-  h1= game
-  p Welcome #{userName}
+  script(src="../javascripts/game.js")
+  h1 The Game Begins!
+  p Welcome #{name}
   ul
-    li#health Health: #{healthPoints}
+    li#health Health: #{health}
     li#points Points: #{points}
-    li#highscore Highscore: 0
-    li#status Status: #{status}
+    li#highscore Highscore: #{highscore}
+    li#status Current room: #{room}
 
   button#reset-points Reset highscore
   button#add-point Add point
