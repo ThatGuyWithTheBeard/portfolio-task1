@@ -1,6 +1,7 @@
 extends layout
 
 block content
+  script(src="javascripts/game.js")
   h1= game
   p Welcome #{userName}
   ul
@@ -17,3 +18,8 @@ block content
   
   input#command-input(type="text")
   button#submit-btn Submit command
+
+  br
+  br
+
+  div#cmd-container

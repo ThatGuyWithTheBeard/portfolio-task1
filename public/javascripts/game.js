@@ -44,9 +44,11 @@ $().ready(() => {
     $("#submit-btn").click((event) => {
 
         //event.preventDefault();
-        direction = $("#command-input").val();
+        command = $("#command-input").val();
         
-        console.log(direction);
+        //console.log(command);
+
+        moveRoom(command);
 
     });
     
@@ -97,7 +99,7 @@ const moveRoom = (command) => {
     const FORWARD = "forward";
     const BACK = "back";
     
-    switch(command) {
+    switch(command.toLowerCase()) {
         case FORWARD:
             
             if(currentRoom.number < rooms.length - 1) {
@@ -105,9 +107,11 @@ const moveRoom = (command) => {
                 rooms[currentRoom.number].isInRoom = false;
                 rooms[currentRoom.number + 1].isInRoom = true;
                 console.log(`You move forward into ${rooms[currentRoom.number + 1].name}`);
+                $("#cmd-container").append(`<div class"message">You move forward into ${rooms[currentRoom.number + 1].name}</div>`);
 
             } else
                 console.log(`You can't move forward here`);
+                $("#cmd-container").append(`<div class"message">You can't move forward here</div>`);
             
             break;
 
@@ -118,15 +122,18 @@ const moveRoom = (command) => {
                 rooms[currentRoom.number].isInRoom = false;
                 rooms[currentRoom.number - 1].isInRoom = true;
                 console.log(`You move back into ${rooms[currentRoom.number - 1].name}`);
+                $("#cmd-container").append(`<div class"message">You move back into ${rooms[currentRoom.number - 1].name}</div>`);
                 
             } else
                 console.log(`You can't move back any further`);
+                $("#cmd-container").append(`<div class"message">You can't move back any further</div>`);
 
             break;
 
         default:
 
             console.log(`The command "${command}" is not recognized`)
+            $("#cmd-container").append(`<div class"message">The command "${command}" is not recognized</div>`);
         
             break;
 
