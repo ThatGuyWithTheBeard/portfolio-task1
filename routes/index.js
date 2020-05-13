@@ -17,8 +17,14 @@ router.get("/", (req, res, next) => {
 /* GET home page. */
 
 // FIXME Update GET requests to be the same as in "task1"
-router.get('/index', (req, res, next) => {
-  res.render("index");
+router.get('/index/:id', (req, res, next) => {
+
+    console.log(req.params.id);
+    
+    User.findOne({ _id: req.params.id }, (err, user) => {
+
+        res.render("index", user);
+    });
 });
 
 
