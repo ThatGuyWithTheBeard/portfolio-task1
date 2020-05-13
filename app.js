@@ -4,7 +4,7 @@ const bodyParser = require("body-parser");
 const path = require('path');
 const mongoose = require("mongoose");
 
-//var cookieParser = require('cookie-parser');
+const cookieParser = require('cookie-parser');
 //var logger = require('morgan');
 
 let socket = require("socket.io");
@@ -59,7 +59,7 @@ app.set('view engine', 'jade');
 //app.use(logger('dev'));
 //app.use(express.json());
 //app.use(express.urlencoded({ extended: false }));
-//app.use(cookieParser());
+app.use(cookieParser());
 
 app.use(express.static(path.join(__dirname, 'public')));
 
