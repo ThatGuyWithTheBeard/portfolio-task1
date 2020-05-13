@@ -21,7 +21,6 @@ router.post('/login', function(req, res, next) { // localhost:4000/users
     		res.send(err);
     	}
 
-    	// FIXME Missing an error handler or something else that denotes that no object was found in the database
     	if(user !== null) {
 			if(req.body.name === user.get("name") && req.body.password === user.get("password")) {
 

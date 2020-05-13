@@ -39,7 +39,6 @@ $().ready(() => {
     
                 location.href = "/index";
             }
-            
         });
     });
 });
