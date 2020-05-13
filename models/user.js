@@ -26,7 +26,7 @@ const UserSchema = new Schema({
     },
     room: {
         type: Number,
-
+        default: 1
     }
 });
 
