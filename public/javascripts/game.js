@@ -1,4 +1,6 @@
 //const User = require("../../models/user.js");
+let socket = io.connect("http://localhost:4000");
+
 
 let highscore;
 let points = 0;
@@ -28,82 +30,49 @@ let rooms = [
     }
 ];
 
-let direction = "";
-
 const nonDigit = /\D+/g;
 const digit = /\d+/g;
 
 $().ready(() => {
-
-    highscore = parseInt(localStorage.getItem("localHighscore"));
-
-    if(isNaN(highscore)) {
-        highscore = 0;
-    }
-
-    $("#highscore").text(`Highscore: ${highscore}`);
-
+    
     // FIXME Update functions with AJAX requests so they're the same as in "task1"
     $("#submit").click((event) => {
 
         event.preventDefault();
-
-        command = $("#commands").val();
-        console.log(command);
-
-        moveRoom(command);
+        handleSubmit( $("#text-input").val() );
     });
 
-    $("#commands").keyup((event) => {
+    $("#text-input").keyup((event) => {
 
         event.preventDefault();
-
         if(event.which === 13) {
-
-            command = $("#commands").val();
-            console.log(command);
-    
-            moveRoom(command);
+            handleSubmit( $("#text-input").val() );
         }
     });
 });
 
-const addPoint = () => {
+const handleSubmit = (input) => {
 
-    points += 1;
-    console.log(points);
-
-    $("#points").text(`Points: ${points}`);
-    console.log($("#points").text());
-    console.log($("#highscore").text());
-
-
-    if(highscore < points) {
-        $("#highscore").text(`Highscore: ${points}`);
-        localStorage.setItem("localHighscore", points);
+    if(input[0] === "!") {
+        handleCommand(input);
+    } else {
+        handleChat(input);
     }
-    
-
-    console.log($("#command-input").val())
+    $("#text-input").val("");
 }
 
-const resetHighscore = () => {
-
-    highscore = 0;
-    $("#highscore").text(`Highscore: ${highscore}`);
-    localStorage.setItem("localHighscore", 0);
-
-}
-
-const moveRoom = (command) => {
+const handleCommand = (command) => {
     
     let currentRoom = rooms.filter(room => room.isInRoom === true)[0];
 
-    const FORWARD = "forward";
-    const BACK = "back";
+    const commands = {
+        FORWARD: "!forward",
+        BACK: "!back",
+        LOOK: "!look",
+    }
     
     switch(command.toLowerCase()) {
-        case FORWARD:
+        case commands.FORWARD:
             if(currentRoom.number < rooms.length - 1) {
                 
                 rooms[currentRoom.number].isInRoom = false;
@@ -121,7 +90,7 @@ const moveRoom = (command) => {
             
             break;
 
-        case BACK:
+        case commands.BACK:
             if(currentRoom.number > 0) {
 
                 rooms[currentRoom.number].isInRoom = false;
@@ -142,4 +111,38 @@ const moveRoom = (command) => {
         
             break;
     }
+}
+
+const handleChat = (message) => {
+
+    //console.log("Chat message:", message);
+    $("#chat-container").append(`<div class="message">${message}</div>`);
+}
+
+
+const addPoint = () => {
+
+    points += 1;
+    console.log(points);
+
+    $("#points").text(`Points: ${points}`);
+    console.log($("#points").text());
+    console.log($("#highscore").text());
+
+
+    if(highscore < points) {
+        $("#highscore").text(`Highscore: ${points}`);
+        localStorage.setItem("localHighscore", points);
+    }
+    
+
+    console.log($("#text-input").val())
+}
+
+const resetHighscore = () => {
+
+    highscore = 0;
+    $("#highscore").text(`Highscore: ${highscore}`);
+    localStorage.setItem("localHighscore", 0);
+
 }
