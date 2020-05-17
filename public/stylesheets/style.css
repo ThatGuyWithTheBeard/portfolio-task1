@@ -13,3 +13,22 @@ a {
     font-weight: bold;
     color: lightslategrey;
 }
+
+#game-container {
+    max-width: 600px;
+    float: left;
+    margin-right: 50px;
+    margin-bottom: 5rem;
+}
+
+#chat-container {
+    max-width: 600px;
+    margin-left: 50px;
+    margin-right: 50px;
+    padding: 10px;
+    float: left;
+}
+
+/* .chat {
+    
+} */

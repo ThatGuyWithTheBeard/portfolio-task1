@@ -2,24 +2,26 @@ extends layout
 
 block content
   script(src="../javascripts/game.js")
-  h1 The Game Begins!
-  p Welcome #{name}
-  ul
-    li#health Health: #{health}
-    li#points Points: #{points}
-    li#highscore Highscore: #{highscore}
-    li#room Current room: #{room}
+  div#game-container
+    h1 The Game Begins!
+    p Welcome #{name}
+    ul
+      li#health Health: #{health}
+      li#points Points: #{points}
+      li#highscore Highscore: #{highscore}
+      li#room Current room: #{room}
 
-  button#reset-points Reset highscore
-  button#add-point Add point
-  
-  br
-  br
-  
-  input#commands(type="text")
-  button#submit Submit command
+    button#reset-points Reset highscore
+    button#add-point Add point
 
-  br
-  br
+    br
+    br
 
-  div#cmd-container
+    input#text-input(type="text")
+    button#submit Submit command
+
+    br
+    br
+
+    div#cmd-container
+  div#chat-container
