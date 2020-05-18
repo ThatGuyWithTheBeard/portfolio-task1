@@ -19,7 +19,10 @@ let rooms = [
         name: "room 2 AKA middle room",
         description: "this rooms has nothing interesting in it",
         isInRoom: false,
-        items: []
+        items: [
+            { name: "apple", effect: "healing", value: 5 },
+            { name: "coin", effect: "points", value: 1 },
+        ]
     },
     {
         number: 2,
@@ -35,6 +38,10 @@ const digit = /\d+/g;
 
 $().ready(() => {
     
+    socket.emit("announce", {
+        name: $("#name").text()
+    });
+
     // FIXME Update functions with AJAX requests so they're the same as in "task1"
     $("#submit").click((event) => {
 
@@ -61,15 +68,31 @@ const handleSubmit = (input) => {
     $("#text-input").val("");
 }
 
-const handleCommand = (command) => {
+const handleCommand = (input) => {
     
     let currentRoom = rooms.filter(room => room.isInRoom === true)[0];
+
+    let command;
+    let arguments;
 
     const commands = {
         FORWARD: "!forward",
         BACK: "!back",
         LOOK: "!look",
+        PICKUP: "!pickup",
+        USE: "!use",
+        HELP: "!help",
     }
+
+    if(input.includes(" ")) {
+
+        [ command, ...arguments ] = input.split(" ");
+        console.log(command, arguments);
+        
+    } else {
+        command = input;
+    }
+    
     
     switch(command.toLowerCase()) {
         case commands.FORWARD:
@@ -78,9 +101,6 @@ const handleCommand = (command) => {
                 rooms[currentRoom.number].isInRoom = false;
                 rooms[currentRoom.number + 1].isInRoom = true;
 
-                // Update front-end
-                //console.log($("#room").text().replace());
-                //$("#room").text().replace(digit, currentRoom.number);
                 $("#cmd-container").append(`<div class="message">You move forward into ${rooms[currentRoom.number + 1].name}</div>`);
 
             } else {
@@ -105,9 +125,68 @@ const handleCommand = (command) => {
 
             break;
 
+        case commands.LOOK:
+
+            if(currentRoom.items.length <= 0) {
+                $("#cmd-container").append(`<div class="message">You see nothing of interest.</div>`);
+            } else {
+                
+                names = currentRoom.items.reduce((itemNames, { name }, index) => {
+                    
+                    if(index + 1 !== currentRoom.items.length)
+                        return itemNames + name + ", ";
+                    else
+                        return itemNames + `and ${name}`;
+
+                }, "");
+
+                console.log(names);
+                $("#cmd-container").append(`<div class="message">You find ${names} in the room.</div>`);
+            }
+
+            break;
+
+        case commands.PICKUP:
+            
+            itemsPickedUp = [];
+            
+            if(arguments.length === 0) {
+                console.log("You need to something to pick up")
+            } else {
+                arguments.forEach((argument) => {
+    
+                    [ item ] = currentRoom.items.filter((item) => item.name === argument);
+    
+                    if(item === undefined) {
+                        $("#cmd-container").append(`<div class="message">No item of name "${argument}"</div>`);
+                    } else {
+                        
+                        itemsPickedUp = [...itemsPickedUp, item];
+                        $("#cmd-container").append(`<div class="message">Picked up item "${argument}"</div>`);
+                    }
+                });
+            }
+
+            console.log(arguments);
+            console.log(itemsPickedUp);
+        
+            break;
+
+        case commands.USE:
+            
+            
+        
+            break;
+
+        case commands.HELP:
+            
+            $("#cmd-container").append(`<div class="message">The command "${input}" is not recognized</div>`);
+        
+            break;
+
         default:
-            console.log(`The command "${command}" is not recognized`)
-            $("#cmd-container").append(`<div class="message">The command "${command}" is not recognized</div>`);
+            console.log(`The command "${input}" is not recognized`)
+            $("#cmd-container").append(`<div class="message">The command "${input}" is not recognized</div>`);
         
             break;
     }
@@ -116,9 +195,26 @@ const handleCommand = (command) => {
 const handleChat = (message) => {
 
     //console.log("Chat message:", message);
-    $("#chat-container").append(`<div class="message">${message}</div>`);
+    //$("#chat-container").append(`<div class="message">${message}</div>`);
+
+    socket.emit("chat", {
+
+        message,
+        name: $("#name").text()
+    });
 }
 
+// FIXME Does not work as expected
+socket.on("announce", (data) => {
+    if(data.name === $("#name").text())
+        $("#chat-container").append(`<div class="message"><em>You</em> have joined the game!</div>`);
+    else
+        $("#chat-container").append(`<div class="message"><em>${data.name}</em> has joined the game!</div>`);
+});
+
+socket.on("chat", (data) => {
+    $("#chat-container").append(`<div class="message"><em>${data.name}:</em>   ${data.message}</div>`);
+});
 
 const addPoint = () => {
 

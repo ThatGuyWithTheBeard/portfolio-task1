@@ -36,6 +36,12 @@ let io = socket(server);
 io.on("connection", (socket) => {
 
   console.log("Made socket connection.", socket.id);
+
+  // FIXME Does not work as expected
+  socket.on("announce", (name) => {
+    io.sockets.emit("announce", name);
+    console.log(name);
+  })
   
   socket.on("chat", (data) => {
 
