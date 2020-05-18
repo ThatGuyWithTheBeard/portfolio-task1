@@ -16,7 +16,6 @@ router.get("/", (req, res, next) => {
 
 /* GET home page. */
 
-// FIXME Update GET requests to be the same as in "task1"
 router.get('/index/:id', (req, res, next) => {
 
     console.log(req.params.id);
