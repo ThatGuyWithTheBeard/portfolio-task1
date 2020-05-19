@@ -37,7 +37,7 @@ $().ready(() => {
                 console.log("Tried POST to login", data);
                 $("#message").append(`<div class="data">Password accepted</div>`);
     
-                location.href = `/index/${data._id}`;
+                location.href = `/${data._id}/game`;
             }
         });
     });
