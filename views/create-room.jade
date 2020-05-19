@@ -1,0 +1,36 @@
+extends layout
+
+block content
+  script(src="../javascripts/createRoom.js")
+  h1 Welcome!
+  h2 Here you can create a room to be used in the game!
+  
+  #room
+    #room-details
+      p Room name
+      input#room-name(type="text")
+
+      p Room description
+      input#room-description(type="text")
+
+      p Enemy amount: 
+        em.enemy-amount
+      input#enemy-amount(type="range" min=0 max=3 value=0)
+
+      p Item amount: 
+        em.item-amount
+      input#item-amount(type="range" min=0 max=3 value=0)
+
+    br
+    br
+
+    #enemy-container
+
+    br
+    br
+
+    #item-container
+
+  #message
+    
+  button#submit Submit room
