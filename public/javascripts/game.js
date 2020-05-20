@@ -6,11 +6,12 @@ const _commands = {
     LOOK: "look",
     PICKUP: "pickup",
     USE: "use",
+    DROP: "drop",
     HELP: "help",
 }
 
 let highscore;
-let points = 0;
+let points;
 let currentRoom;
 let rooms;
 
@@ -157,9 +158,15 @@ const handleCommand = (command, arguments) => {
         
             break;
 
+        case _commands.DROP:
+            
+            
+        
+            break;
+
         case _commands.HELP:
             
-            $("#cmd-container").append(`<div class="message">The command "${command}" is not recognized</div>`);
+            handleHelp();
         
             break;
 
@@ -171,55 +178,44 @@ const handleCommand = (command, arguments) => {
     }
 }
 
+const handleForward = () => {
+    
+}
+
+const handleBack = () => {
+
+}
+
+const handleLook = () => {
+    rooms.forEach(name => $("#cmd-container").append(`<div class="message">${name}</div>`));
+    console.log(rooms);
+}
+
+const handlePickup = (item) => {
+
+}
+
+const handleUse = (item) => {
+
+}
+
+const handleDrop = (item) => {
+
+}
+
+const handleHelp = () => {
+
+    let commandString = Object.values(_commands).reduce((prevCommand, command) => { return command === "help" ? `${prevCommand} and ${command}` : `${prevCommand}, ${command}` });
+
+    $("#cmd-container").append(`<div class="message">Availble commands: ${commandString}</div>`);
+}
+
+
 const handleChat = (message) => {
-
-    //console.log("Chat message:", message);
-    //$("#chat-container").append(`<div class="message">${message}</div>`);
-
     socket.emit("chat", {
-
         message,
         name: $("#name").text()
     });
-}
-
-// FIXME Does not work as expected
-socket.on("announce", (data) => {
-    if(data.name === $("#name").text())
-        $("#chat-container").append(`<div class="message"><em>You</em> have joined the game!</div>`);
-    else
-        $("#chat-container").append(`<div class="message"><em>${data.name}</em> has joined the game!</div>`);
-});
-
-socket.on("chat", (data) => {
-    $("#chat-container").append(`<div class="message"><em>${data.name}:</em>   ${data.message}</div>`);
-});
-
-const addPoint = () => {
-
-    points += 1;
-    console.log(points);
-
-    $("#points").text(`Points: ${points}`);
-    console.log($("#points").text());
-    console.log($("#highscore").text());
-
-
-    if(highscore < points) {
-        $("#highscore").text(`Highscore: ${points}`);
-        localStorage.setItem("localHighscore", points);
-    }
-    
-
-    console.log($("#text-input").val())
-}
-
-const resetHighscore = () => {
-
-    highscore = 0;
-    $("#highscore").text(`Highscore: ${highscore}`);
-    localStorage.setItem("localHighscore", 0);
-
 }
 
 const loadAvailableRooms = () => {
@@ -239,12 +235,8 @@ const loadAvailableRooms = () => {
 }
 
 const loadCurrentRoom = () => {
-
-    console.log(location.pathname);
-    console.log(location.pathname.replace(/game/g, "rooms"));
     
     route = location.pathname.replace(/game/g, "rooms");
-
     $.ajax({
         method: "POST", 
         url: route,
@@ -256,12 +248,16 @@ const loadCurrentRoom = () => {
             console.log("Tried POST to /:id/rooms");
             console.log(data);
             currentRoom = data;
-            //$("#cmd-container").append(`<div class="data">Loaded room?</div>`);
         }
     });
 }
 
-const handleLook = () => {
-    rooms.forEach(name => $("#cmd-container").append(`<div class="message">${name}</div>`));
-    console.log(rooms);
-}
+socket.on("announce", (data) => {
+    if(data.name === $("#name").text())
+        $("#chat-container").append(`<div class="message"><em>You</em> have joined the game!</div>`);
+    else
+        $("#chat-container").append(`<div class="message"><em>${data.name}</em> has joined the game!</div>`);
+});
+socket.on("chat", (data) => {
+    $("#chat-container").append(`<div class="message"><em>${data.name}:</em>   ${data.message}</div>`);
+});
