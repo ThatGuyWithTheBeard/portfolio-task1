@@ -70,7 +70,7 @@ router.get("/rooms", (req, res, next) => {
 
 });
 
-router.post("/:id/rooms", (req, res, next) => {
+router.get("/:id/room", (req, res, next) => {
 
     console.log(req.params.id);
     //console.log(req.body);
@@ -97,19 +97,48 @@ router.post("/:id/rooms", (req, res, next) => {
     });
 
     // res.send({  })
-})
+});
+
+router.get("/:id/room/:locationIndex", (req, res, next) => {
+
+    console.log("Requested locationIndex: ", req.params.locationIndex);
+
+    Room.findOne({ locationIndex: req.params.locationIndex }, (err, room) => {
+
+        if(err) {
+            console.log(err);
+            res.send(err);
+        }
+        console.log(room);
+
+        if(room === null) {
+            res.send({ message: { forward: "You can't move any further forward", back: "You can't move any further back" } });
+        } else {
+            User.findByIdAndUpdate(req.params.id, { room: room.name }, { new: true }, (userErr, user) => {
+    
+                if(userErr) {
+                    console.log(userErr);
+                    res.send(userErr);
+                }
+                console.log(user);
+    
+                res.send(user);
+            });
+        }
+    });/* .catch(next); */
+});
 
 router.get("/login", (req, res) => {
 
   res.render("login");
   
-})
+});
 
 router.get("/register", (req, res) => {
 
   res.render("register");
   
-})
+});
 
 router.get("/chat", (req, res) =>{
 
