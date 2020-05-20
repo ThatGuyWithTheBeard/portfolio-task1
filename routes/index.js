@@ -18,8 +18,6 @@ router.get("/", (req, res, next) => {
 /* GET home page. */
 
 router.get('/:id/game', (req, res, next) => {
-
-    console.log(req.params.id);
     
     User.findOne({ _id: req.params.id }, (err, user) => {
 
@@ -41,6 +39,56 @@ router.post("/:id/create-room", (req, res, next) => {
     }).catch(next);
     
 });
+
+router.get("/rooms", (req, res, next) => {
+
+    startRoom = "Start Room";
+    let roomNames;
+
+    Room.find({}, (err, rooms) => {
+
+        if(err) {
+            console.log(err);
+    		res.send(err);
+        } 
+
+        //console.log(rooms);
+
+        roomNames = rooms.map(room => room.name); /* .filter(room => room !== startRoom) */
+        console.log(roomNames);
+        res.send(roomNames);
+    });
+
+});
+
+router.post("/:id/rooms", (req, res, next) => {
+
+    console.log(req.params.id);
+    //console.log(req.body);
+
+    User.findById(req.params.id, (userErr, user) => {
+
+        console.log(user);
+
+        if(userErr) {
+    		console.log(userErr);
+    		res.send(userErr);
+        }
+        Room.findOne({ name: user.room }, (roomErr, room) => {
+            
+            if(roomErr) {
+                console.log(roomErr);
+                res.send(roomErr);
+            }
+
+            console.log(room);
+            
+            res.send(room);
+        });
+    });
+
+    // res.send({  })
+})
 
 router.get("/login", (req, res) => {
 
