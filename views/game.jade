@@ -7,10 +7,14 @@ block content
     h2 Welcome 
       em#name #{name}
     ul
-      li#health Health: #{health}
-      li#points Points: #{points}
-      li#highscore Highscore: #{highscore}
-      li#room Current room: #{room}
+      li Health:
+        span#health #{health}
+      li Points:
+        span#points #{points}
+      li Highscore:
+        span#highscore #{highscore}
+      li Current room: 
+        span#room #{room}
 
     button#reset-points Reset highscore
     button#add-point Add point
