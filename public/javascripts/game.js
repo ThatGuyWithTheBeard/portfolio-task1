@@ -1,4 +1,3 @@
-//const User = require("../../models/user.js");
 let socket = io.connect("http://localhost:4000");
 
 const _commands = {
@@ -27,7 +26,6 @@ $().ready(() => {
         name: $("#name").text()
     });
 
-    // FIXME Update functions with AJAX requests so they're the same as in "task1"
     $("#submit").click((event) => {
 
         event.preventDefault();
@@ -71,20 +69,6 @@ const handleSubmit = (input) => {
 }
 
 const handleCommand = (command, arguments) => {
-    
-    // let currentRoom = rooms.filter(room => room.isInRoom === true)[0];
-
-    /* let command;
-    let arguments; */
-
-    /* if(command.includes(" ")) {
-
-        [ command, ...arguments ] = command.split(" ");
-        console.log(command, arguments);
-        
-    } else {
-        command = command;
-    } */
     
     
     switch(command.toLowerCase()) {
@@ -250,9 +234,6 @@ const loadAvailableRooms = () => {
             console.log("Tried POST to /rooms");
             console.log(data);
             rooms = data;
-            
-            //$("#cmd-container").append(`<div class="data">Loaded available rooms?</div>`);
-            //rooms.forEach(name => $("#cmd-container").append(`<div class="data">${name}</div>`));
         }
     });
 }
