@@ -16,6 +16,7 @@ const ItemSchema = new Schema({
 const RoomSchema = new Schema({
     name: { type: String, unique: true },
     description: String,
+    locationIndex: { type: Number, unique: [true, "This location index is taken. New rooms should have an index equal to the amount of rooms in database at the time of creation."] },
     enemies: [EnemySchema],
     items: [ItemSchema]
 });

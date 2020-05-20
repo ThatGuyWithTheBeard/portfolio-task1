@@ -34,16 +34,25 @@ router.post("/:id/create-room", (req, res, next) => {
 
     console.log(req.body);
 
-    Room.create(req.body).then((room) => {
-        res.json(room);
-    }).catch(next);
+    Room.countDocuments({}, (err, count) => {
+        if(err) {
+            console.log(err);
+            res.send(err);
+        }
+
+        newRoom = Object.assign({}, req.body, { locationIndex: count })
+        console.log(newRoom);
+
+        Room.create(newRoom).then((room) => {
+            res.json(room);
+        }).catch(next);
+    })
+
     
 });
 
 router.get("/rooms", (req, res, next) => {
 
-    startRoom = "Start Room";
-    let roomNames;
 
     Room.find({}, (err, rooms) => {
 
