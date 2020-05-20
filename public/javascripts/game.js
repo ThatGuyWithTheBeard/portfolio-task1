@@ -76,47 +76,31 @@ const handleCommand = (command, argument) => {
     
     switch(command.toLowerCase()) {
         case _commands.FORWARD:
-            
             handleForward();
-            
             break;
 
         case _commands.BACK:
-            
             handleBack();
-
             break;
 
         case _commands.LOOK:
-
             handleLook();
-        
-            
-
             break;
 
         case _commands.PICKUP:
-            
             handlePickup(argument);
-        
             break;
 
         case _commands.USE:
-            
             handleUse(argument);
-        
             break;
 
         case _commands.DROP:
-            
             handleDrop(argument);
-        
             break;
 
         case _commands.HELP:
-            
             handleHelp();
-        
             break;
 
         default:
@@ -127,6 +111,7 @@ const handleCommand = (command, argument) => {
     }
 }
 
+// Done
 const handleForward = () => {
 
     route = location.pathname.replace(/game/g, "room") + `/${currentRoom.locationIndex + 1}`;
@@ -155,6 +140,7 @@ const handleForward = () => {
     });
 }
 
+// Done
 const handleBack = () => {
 
     route = location.pathname.replace(/game/g, "room") + `/${currentRoom.locationIndex - 1}`;
@@ -183,6 +169,7 @@ const handleBack = () => {
     });
 }
 
+// Done
 const handleLook = () => {
 
     /* //? Look for rooms?
@@ -258,7 +245,6 @@ const handleHelp = () => {
 
     $("#cmd-container").append(`<div class="message">Available commands: ${commandString}</div>`);
 }
-
 
 const handleChat = (message) => {
     socket.emit("chat", {
