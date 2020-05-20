@@ -20,7 +20,8 @@ const app = express();
 mongoose.connect("mongodb://localhost/textgame", { 
   useNewUrlParser: true, 
   useUnifiedTopology: true,
-  useCreateIndex: true
+  useCreateIndex: true,
+  useFindAndModify: false
 }); // MongoClient.connect(url, {useNewUrlParser: true } )
 mongoose.Promise = global.Promise;
 
