@@ -44,6 +44,8 @@ $().ready(() => {
 
 const handleSubmit = (input) => {
 
+    $("#cmd-container").children().fadeOut(1200);
+
     let isChatInput = true;
     const [command, ...arguments] = input.split(" ");
     const stringArgs = arguments.length > 0 ? arguments.reduce((prevArg, argument) => { return `${prevArg} ${argument}` }) : "noArgs";
@@ -183,30 +185,33 @@ const handleBack = () => {
 
 const handleLook = () => {
 
-    //? Look for rooms?
+    /* //? Look for rooms?
     for(const room of rooms) {
         $("#cmd-container").append(`<div class="message">${room}</div>`);
-    }
+    } */
 
-    //* Look for items
-    if(currentRoom.items.length <= 0) {
+    let items;
+    let enemies;
+    
+    //* Look for items or enemies
+    if(currentRoom.items.length <= 0 && currentRoom.enemies.length <= 0) {
         $("#cmd-container").append(`<div class="message">You see nothing of interest.</div>`);
     } else {
-        
-        names = currentRoom.items.reduce((itemNames, { name }, index) => {
-            
-            if(index + 1 !== currentRoom.items.length)
-                return itemNames + name + ", ";
-            else
-                return itemNames + `and ${name}`;
+        if(currentRoom.items.length !== 0) {
+            items = currentRoom.items.reduce((itemString, { name }, index) => { return index === 0 ? name : `${itemString}, ${name}` }, "");
+            console.log(items);
+        }
 
-        }, "");
-
-        console.log(names);
-        $("#cmd-container").append(`<div class="message">You find ${names} in the room.</div>`);
+        if(currentRoom.enemies.length !== 0) {
+            enemies = currentRoom.enemies.reduce((enemyString, { name }, index) => { return index === 0 ? name : `${enemyString}, ${name}` }, "");
+            console.log(enemies);
+        }
     }
+    
+    const itemMessage = items === undefined ? `You find no items.` : `You find ${items} in the room.`;
+    const enemyMessage = enemies === undefined ? `` : ` However, the room is guarded by ${enemies}.`;
 
-    console.log(rooms);
+    $("#cmd-container").append(`<div class="message">${itemMessage} ${enemyMessage}</div>`);
 }
 
 const handlePickup = (item) => {
@@ -251,7 +256,7 @@ const handleDrop = (item) => {
 const handleHelp = () => {
     let commandString = Object.values(_commands).reduce((prevCommand, command) => { return command === "help" ? `${prevCommand} and ${command}` : `${prevCommand}, ${command}` });
 
-    $("#cmd-container").append(`<div class="message">Availble commands: ${commandString}</div>`);
+    $("#cmd-container").append(`<div class="message">Available commands: ${commandString}</div>`);
 }
 
 
@@ -279,7 +284,7 @@ const loadAvailableRooms = () => {
 }
 
 const loadCurrentRoom = () => {
-    
+
     route = location.pathname.replace(/game/g, "room");
     $.ajax({
         method: "GET", 
