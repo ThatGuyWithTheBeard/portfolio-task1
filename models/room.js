@@ -14,7 +14,7 @@ const ItemSchema = new Schema({
 });
 
 const RoomSchema = new Schema({
-    name: String,
+    name: { type: String, unique: true },
     description: String,
     enemies: [EnemySchema],
     items: [ItemSchema]

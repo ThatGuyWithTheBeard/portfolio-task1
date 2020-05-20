@@ -15,7 +15,7 @@ const UserSchema = new Schema({
     health:     { type: Number, default: 10 },
     points:     { type: Number, default: 0 },
     highscore:  { type: Number, default: 0 },
-    room:       { type: Number, default: 1 },
+    room:       { type: String, default: "Start Room" },
     items:      [ItemSchema]
 });
 
