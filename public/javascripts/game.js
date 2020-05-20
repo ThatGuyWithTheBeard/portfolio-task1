@@ -1,43 +1,28 @@
 //const User = require("../../models/user.js");
 let socket = io.connect("http://localhost:4000");
 
+const _commands = {
+    FORWARD: "forward",
+    BACK: "back",
+    LOOK: "look",
+    PICKUP: "pickup",
+    USE: "use",
+    HELP: "help",
+}
 
 let highscore;
 let points = 0;
-let currentRoom = 0;
-
-let rooms = [
-    {
-        number: 0,
-        name: "room 1 AKA start room",
-        description: "there's a painting on the wall",
-        isInRoom: true,
-        items: []
-    },
-    {
-        number: 1,
-        name: "room 2 AKA middle room",
-        description: "this rooms has nothing interesting in it",
-        isInRoom: false,
-        items: [
-            { name: "apple", effect: "healing", value: 5 },
-            { name: "coin", effect: "points", value: 1 },
-        ]
-    },
-    {
-        number: 2,
-        name: "room 3 AKA the final room",
-        description: "there's a pit in front of you. You can't go any further",
-        isInRoom: false,
-        items: []
-    }
-];
+let currentRoom;
+let rooms;
 
 const nonDigit = /\D+/g;
 const digit = /\d+/g;
 
 $().ready(() => {
     
+    loadAvailableRooms();
+    loadCurrentRoom();
+
     socket.emit("announce", {
         name: $("#name").text()
     });
@@ -60,42 +45,50 @@ $().ready(() => {
 
 const handleSubmit = (input) => {
 
-    if(input[0] === "!") {
-        handleCommand(input);
-    } else {
-        handleChat(input);
+    let isChatInput = true;
+    const [command, ...arguments] = input.split(" ");
+    const stringArgs = arguments.length > 0 ? arguments.reduce((prevArg, argument) => { return `${prevArg} ${argument}` }) : "noArgs";
+    
+    commandValues = Object.values(_commands);
+    
+    for(const commandOption of commandValues) {
+        if(command.toLowerCase() === commandOption) {
+            console.log("Input command matched. Sending to handleCommand.")
+            handleCommand(command, stringArgs);
+            isChatInput = false;
+            break;
+        }
     }
+
+    if(isChatInput) {
+        handleChat(input);
+    } else {
+        console.log("Something isn't right in handleSubmit");
+        console.log(input);
+    }
+
     $("#text-input").val("");
 }
 
-const handleCommand = (input) => {
+const handleCommand = (command, arguments) => {
     
-    let currentRoom = rooms.filter(room => room.isInRoom === true)[0];
+    // let currentRoom = rooms.filter(room => room.isInRoom === true)[0];
 
-    let command;
-    let arguments;
+    /* let command;
+    let arguments; */
 
-    const commands = {
-        FORWARD: "!forward",
-        BACK: "!back",
-        LOOK: "!look",
-        PICKUP: "!pickup",
-        USE: "!use",
-        HELP: "!help",
-    }
+    /* if(command.includes(" ")) {
 
-    if(input.includes(" ")) {
-
-        [ command, ...arguments ] = input.split(" ");
+        [ command, ...arguments ] = command.split(" ");
         console.log(command, arguments);
         
     } else {
-        command = input;
-    }
+        command = command;
+    } */
     
     
     switch(command.toLowerCase()) {
-        case commands.FORWARD:
+        case _commands.FORWARD:
             if(currentRoom.number < rooms.length - 1) {
                 
                 rooms[currentRoom.number].isInRoom = false;
@@ -110,7 +103,7 @@ const handleCommand = (input) => {
             
             break;
 
-        case commands.BACK:
+        case _commands.BACK:
             if(currentRoom.number > 0) {
 
                 rooms[currentRoom.number].isInRoom = false;
@@ -125,8 +118,10 @@ const handleCommand = (input) => {
 
             break;
 
-        case commands.LOOK:
+        case _commands.LOOK:
 
+            handleLook();
+        
             if(currentRoom.items.length <= 0) {
                 $("#cmd-container").append(`<div class="message">You see nothing of interest.</div>`);
             } else {
@@ -146,7 +141,7 @@ const handleCommand = (input) => {
 
             break;
 
-        case commands.PICKUP:
+        case _commands.PICKUP:
             
             itemsPickedUp = [];
             
@@ -172,21 +167,21 @@ const handleCommand = (input) => {
         
             break;
 
-        case commands.USE:
+        case _commands.USE:
             
             
         
             break;
 
-        case commands.HELP:
+        case _commands.HELP:
             
-            $("#cmd-container").append(`<div class="message">The command "${input}" is not recognized</div>`);
+            $("#cmd-container").append(`<div class="message">The command "${command}" is not recognized</div>`);
         
             break;
 
         default:
-            console.log(`The command "${input}" is not recognized`)
-            $("#cmd-container").append(`<div class="message">The command "${input}" is not recognized</div>`);
+            console.log(`The command "${command}" is not recognized`)
+            $("#cmd-container").append(`<div class="message">The command "${command}" is not recognized</div>`);
         
             break;
     }
@@ -241,4 +236,51 @@ const resetHighscore = () => {
     $("#highscore").text(`Highscore: ${highscore}`);
     localStorage.setItem("localHighscore", 0);
 
+}
+
+const loadAvailableRooms = () => {
+    $.ajax({
+        method: "GET", 
+        url: "/rooms",
+        error: (err) => {
+            console.log(err);
+            $("#cmd-container").append(`<div class="error">${err.statusText}</div>`);
+        },
+        success: (data) => {
+            console.log("Tried POST to /rooms");
+            console.log(data);
+            rooms = data;
+            
+            //$("#cmd-container").append(`<div class="data">Loaded available rooms?</div>`);
+            //rooms.forEach(name => $("#cmd-container").append(`<div class="data">${name}</div>`));
+        }
+    });
+}
+
+const loadCurrentRoom = () => {
+
+    console.log(location.pathname);
+    console.log(location.pathname.replace(/game/g, "rooms"));
+    
+    route = location.pathname.replace(/game/g, "rooms");
+
+    $.ajax({
+        method: "POST", 
+        url: route,
+        error: (err) => {
+            console.log(err);
+            $("#cmd-container").append(`<div class="error">${err.responseJSON.message}</div>`);
+        },
+        success: (data) => {
+            console.log("Tried POST to /:id/rooms");
+            console.log(data);
+            currentRoom = data;
+            //$("#cmd-container").append(`<div class="data">Loaded room?</div>`);
+        }
+    });
+}
+
+const handleLook = () => {
+    rooms.forEach(name => $("#cmd-container").append(`<div class="message">${name}</div>`));
+    console.log(rooms);
 }
