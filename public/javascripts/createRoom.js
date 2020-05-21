@@ -21,7 +21,10 @@ $().ready(() => {
         handleSubmit();
     });
 
-    
+    $("#main-menu").click(() => {
+        mainMenuPath = location.pathname.replace("create-room", "main-menu");
+        location.href = mainMenuPath;
+    })
 });
 
 const handleSubmit = () => {
