@@ -43,7 +43,7 @@ router.post("/register", (req, res, next) => {
 
 	console.log("POST to /users/register triggered");
 
-	User.create(req.body).then((user) => { // TODO This could be easier to read with async/await
+	User.create(req.body).then((user) => {
 		res.json(user);
 	}).catch(next);
 });
