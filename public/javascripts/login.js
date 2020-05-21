@@ -30,14 +30,13 @@ $().ready(() => {
             }),
             error: (err) => {
                 console.log(err);
-                //$("#message").append(`<div class="error">${err.statusText}</div>`);
                 $("#message").append(`<div class="error">${err.responseJSON.message}</div>`);
             },
             success: (data) => {
                 console.log("Tried POST to login", data);
                 $("#message").append(`<div class="data">Password accepted</div>`);
     
-                location.href = `/${data._id}/game`;
+                location.href = `/${data._id}/main-menu`;
             }
         });
     });

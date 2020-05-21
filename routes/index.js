@@ -100,8 +100,11 @@ router.get('/:id/game', (req, res, next) => {
     });
 });
 
-router.get("/:id/create-room", (req, res, next) => {
+router.get("/:id/main-menu", (req, res, next) => {
+    res.render("main-menu");
+});
 
+router.get("/:id/create-room", (req, res, next) => {
     res.render("create-room");
 });
 

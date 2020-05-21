@@ -38,7 +38,8 @@ $().ready(() => {
                 console.log("Tried POST to registers", data);
                 $("#message").append(`<div class="data">Password accepted</div>`);
     
-                location.href = `/${data._id}/game`;
+                location.href = `/${data._id}/main-menu`;
+                // location.href = `/${data._id}/game`;
             }
         });
     });
