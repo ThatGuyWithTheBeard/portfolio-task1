@@ -14,6 +14,10 @@ a {
     color: lightslategrey;
 }
 
+.data-emphasis {
+    color: rgb(32, 132, 178);
+}
+
 #game-container {
     /* max-width: 600px; */
     width: 40%;
