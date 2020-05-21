@@ -10,17 +10,15 @@ const _commands = {
     HELP: "help",
 }
 
-let highscore;
-let points;
 let currentRoom;
-let rooms;
+let user;
 
 const nonDigit = /\D+/g;
 const digit = /\d+/g;
 
 $().ready(() => {
     
-    loadAvailableRooms();
+    loadUser();
     loadCurrentRoom();
 
     socket.emit("announce", {
@@ -71,8 +69,6 @@ const handleSubmit = (input) => {
 }
 
 const handleCommand = (command, argument) => {
-    
-    // TODO Make command messages fadeout and remove element when complete
     
     switch(command.toLowerCase()) {
         case _commands.FORWARD:
@@ -172,11 +168,6 @@ const handleBack = () => {
 // Done
 const handleLook = () => {
 
-    /* //? Look for rooms?
-    for(const room of rooms) {
-        $("#cmd-container").append(`<div class="message">${room}</div>`);
-    } */
-
     let items;
     let enemies;
     
@@ -195,38 +186,65 @@ const handleLook = () => {
         }
     }
     
-    const itemMessage = items === undefined ? `You find no items.` : `You find ${items} in the room.`;
-    const enemyMessage = enemies === undefined ? `` : ` However, the room is guarded by ${enemies}.`;
+    const itemMessage = items === undefined ? `You find no items.` : `You find <em>${items}</em> in the room.`;
+    const enemyMessage = enemies === undefined ? `` : ` However, the room is guarded by <em>${enemies}</em>.`;
 
     $("#cmd-container").append(`<div class="message">${itemMessage} ${enemyMessage}</div>`);
 }
 
 const handlePickup = (item) => {
-    // TODO Pick up a specified item and update user and room
 
-    /* itemsPickedUp = [];
-            
-    if(argument.length === 0) {
-        console.log("You need to something to pick up")
+    console.log(currentRoom.items.length);
+    if(currentRoom.items.length === 0) {
+        $("#cmd-container").append(`<div class="message">There are no items to pickup in the room.</div>`);
     } else {
-        argument.forEach((argument) => {
 
-            [ item ] = currentRoom.items.filter((item) => item.name === argument);
+        if(item === "noArgs") {
+            console.log(item);
+            $("#cmd-container").append(`<div class="message">To pick up an item write "pickup <em>item</em>"</div>`);
 
-            if(item === undefined) {
-                $("#cmd-container").append(`<div class="message">No item of name "${argument}"</div>`);
-            } else {
+            return;
+        }
+
+        for(const itemInRoom of currentRoom.items) {
+            
+            console.log(item);
+            if(item.toLowerCase() === itemInRoom.name.toLowerCase()) {
+
+                let route = location.pathname.replace("game", "move-item-to-user");
                 
-                itemsPickedUp = [...itemsPickedUp, item];
-                $("#cmd-container").append(`<div class="message">Picked up item "${argument}"</div>`);
+                $.ajax({
+                    method: "POST", 
+                    url: route,
+                    contentType: "application/json",
+                    data: JSON.stringify({
+                        item: itemInRoom,
+                        roomId: currentRoom._id
+                    }),
+                    error: (err) => {
+                        console.log(err);
+                        $("#cmd-container").append(`<div class="error">${err.statusText}</div>`);
+                    },
+                    success: (updatedUser) => {
+                        loadCurrentRoom();
+                        console.log("Tried POST to /:id/update-items");
+                        console.log(updatedUser);
+                        itemString = updatedUser.items.reduce((prevItem, { name }, index) => { return index === 0 ? `${name}` : `${prevItem}, ${name}` }, "");
+                        $("#items").text(itemString);
+                    }
+                });
+
+                $("#cmd-container").append(`<div class="message">You pickup <em>${itemInRoom.name}</em>.</div>`);
+                return;
+            } else {
+                console.log("Input:", `"${item}"`, "Item in room:", `"${itemInRoom.name}"`);
             }
-        });
+        }
+
+        $("#cmd-container").append(`<div class="message">There are no <em>${item}</em> to pickup.</div>`);
+        
+        return;
     }
-
-    console.log(argument);
-    console.log(itemsPickedUp); */
-
-    $("#cmd-container").append(`<div class="message">The command "pickup" isn't implemented currently.</div>`);
 }
 
 const handleUse = (item) => {
@@ -253,22 +271,6 @@ const handleChat = (message) => {
     });
 }
 
-const loadAvailableRooms = () => {
-    $.ajax({
-        method: "GET", 
-        url: "/rooms",
-        error: (err) => {
-            console.log(err);
-            $("#cmd-container").append(`<div class="error">${err.statusText}</div>`);
-        },
-        success: (data) => {
-            console.log("Tried POST to /rooms");
-            console.log(data);
-            rooms = data;
-        }
-    });
-}
-
 const loadCurrentRoom = () => {
 
     route = location.pathname.replace(/game/g, "room");
@@ -285,6 +287,33 @@ const loadCurrentRoom = () => {
 
             currentRoom = data;
             $("#room").text(`${currentRoom.name}`);
+        }
+    });
+}
+
+const loadUser = () => {
+
+    let route = location.pathname.replace("game", "load-user");
+
+    $.ajax({
+        method: "GET", 
+        url: route,
+        error: (err) => {
+            console.log(err);
+            $("#cmd-container").append(`<div class="error">${err.statusText}</div>`);
+        },
+        success: (data) => {
+            console.log("Tried GET to /:id/load-user");
+            console.log(data);
+            
+            user = data;
+
+            if(user.items.length === 0) {
+                $("#items").text(`No items in inventory`);
+            } else {
+                itemString = user.items.reduce((prevItem, { name }, index) => { return index === 0 ? `${name}` : `${prevItem}, ${name}` }, "");
+                $("#items").text(itemString);
+            }
         }
     });
 }
