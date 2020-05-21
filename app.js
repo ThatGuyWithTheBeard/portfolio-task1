@@ -18,17 +18,17 @@ const app = express();
 
 // Connect to MongoDB
 mongoose.connect("mongodb://localhost/textgame", { 
-  useNewUrlParser: true, 
-  useUnifiedTopology: true,
-  useCreateIndex: true,
-  useFindAndModify: false
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+    useCreateIndex: true,
+    useFindAndModify: false
 }); // MongoClient.connect(url, {useNewUrlParser: true } )
 mongoose.Promise = global.Promise;
 
 let port = process.env.port || 4000;
 
 let server = app.listen(port, () => {
-  console.log(`Listening to requests on port ${port}\n`);
+    console.log(`Listening to requests on port ${port}\n`);
 });
 
 // Socket setup
@@ -36,25 +36,26 @@ let io = socket(server);
 
 io.on("connection", (socket) => {
 
-  console.log("Made socket connection.", socket.id);
-
-  // FIXME Does not work as expected
-  socket.on("announce", (name) => {
-    io.sockets.emit("announce", name);
-    console.log(name);
-  })
-  
-  socket.on("chat", (data) => {
-
-    io.sockets.emit("chat", data);
-    console.log(data);
-    
-  });
-
-  socket.on("typing", (data) => {
-    socket.broadcast.emit("typing", data);
-  });
-  
+    console.log("Made socket connection.", socket.id);
+    socket.on("announce", (name) => {
+        io.sockets.emit("announce", name);
+        console.log(name);
+    })
+    socket.on("chat", (data) => {
+        io.sockets.emit("chat", data);
+        console.log(data);
+    });
+    socket.on("typing", (data) => {
+        socket.broadcast.emit("typing", data);
+    });
+    socket.on("item-drop", (data) => {
+        console.log(data);
+        socket.broadcast.emit("item-drop", data);
+    })
+    socket.on("item-pickup", (data) => {
+        console.log(data);
+        socket.broadcast.emit("item-pickup", data);
+    })
 });
 
 
@@ -62,7 +63,7 @@ io.on("connection", (socket) => {
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
 
-// TODO Check if these middlewares are needed. Remove them if not.
+//? TODO Check if these middlewares are needed. Remove them if not.
 //app.use(logger('dev'));
 //app.use(express.json());
 //app.use(express.urlencoded({ extended: false }));
@@ -76,11 +77,11 @@ app.use('/users', usersRouter);
 
 // Error handling middleware (needs to be last)
 app.use((err, req, res, next) => {
-  console.error(err);
+    console.error(err);
 
-  res.status(422).send({
-    error: err.message
-  });
+    res.status(422).send({
+        error: err.message
+    });
 
 });
 
