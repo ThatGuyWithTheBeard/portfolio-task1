@@ -17,6 +17,81 @@ router.get("/", (req, res, next) => {
 
 /* GET home page. */
 
+router.get("/:id/load-user", (req, res, next) => {
+
+    console.log("_id from params when loading user data:", req.params.id);
+    console.log(req.params);
+
+    User.findById(req.params.id, (err, user) => {
+
+        if(err) {
+            console.log(err);
+            res.send(err);
+        }
+        console.log(user);
+        res.send(user);
+    });
+});
+
+router.post("/:id/move-item-to-user", (req, res, next) => {
+
+    console.log(req.body);
+    User.findById(req.params.id, (err, user) => {
+
+        if(err) {
+            console.log(err); 
+            res.send(err);
+        }
+        user.items.push(req.body.item);
+        user.save().then(() => {
+            res.send(user);
+        });
+        console.log(`New item "${req.body.item.name}" for user:`, user.items);
+    });
+    Room.findById(req.body.roomId, (err, room) => {
+
+        if(err) {
+            console.log(err); 
+            res.send(err);
+        }
+
+        room.items.id(req.body.item._id).remove();
+        room.save().then(() => {
+            console.log(`Item "${req.body.item.name}" has been removed from the room.`);
+        });
+    });
+});
+
+router.post("/:id/move-item-to-room", (req, res, next) => {
+
+    console.log(req.body);
+
+    User.findById(req.params.id, (err, user) => {
+        if(err) {
+            console.log(err); 
+            res.send(err);
+        }
+
+        user.items.id(req.body.item._id).remove();
+        user.save().then(() => {
+            res.send(user);
+        })
+        console.log(`Dropped item "${req.body.item.name}" for user:`, user.items);
+    });
+
+    Room.findById(req.body.roomId, (err, room) => {
+        if(err) {
+            console.log(err); 
+            res.send(err);
+        }
+
+        room.items.push(req.body.item);
+        room.save().then(() => {
+            console.log(`Item "${req.body.item.name}" has been dropped in the room.`);
+        });
+    });
+});
+
 router.get('/:id/game', (req, res, next) => {
     
     User.findOne({ _id: req.params.id }, (err, user) => {
