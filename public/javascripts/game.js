@@ -194,7 +194,6 @@ const handleLook = () => {
 
 const handlePickup = (item) => {
 
-    console.log(currentRoom.items.length);
     if(currentRoom.items.length === 0) {
         $("#cmd-container").append(`<div class="message">There are no items to pickup in the room.</div>`);
     } else {
@@ -227,7 +226,7 @@ const handlePickup = (item) => {
                     },
                     success: (updatedUser) => {
                         loadCurrentRoom();
-                        console.log("Tried POST to /:id/update-items");
+                        console.log("Tried POST to /:id/move-item-to-user");
                         console.log(updatedUser);
                         itemString = updatedUser.items.reduce((prevItem, { name }, index) => { return index === 0 ? `${name}` : `${prevItem}, ${name}` }, "");
                         $("#items").text(itemString);
@@ -240,9 +239,7 @@ const handlePickup = (item) => {
                 console.log("Input:", `"${item}"`, "Item in room:", `"${itemInRoom.name}"`);
             }
         }
-
         $("#cmd-container").append(`<div class="message">There are no <em>${item}</em> to pickup.</div>`);
-        
         return;
     }
 }
@@ -253,8 +250,53 @@ const handleUse = (item) => {
 }
 
 const handleDrop = (item) => {
-    // TODO Drop a specified item and update user and room
-    $("#cmd-container").append(`<div class="message">The command "drop" isn't implemented currently.</div>`);
+
+    if(user.items.length === 0) {
+        $("#cmd-container").append(`<div class="message">There are no items in your inventory to drop.</div>`);
+    } else {
+
+        if(item === "noArgs") {
+            $("#cmd-container").append(`<div class="message">To drop an item write "drop <em>item</em>"</div>`);
+            return;
+        }
+
+        for(const itemInInventory of user.items) {
+            
+            console.log(item);
+            if(item.toLowerCase() === itemInInventory.name.toLowerCase()) {
+
+                let route = location.pathname.replace("game", "move-item-to-room");
+                
+                $.ajax({
+                    method: "POST", 
+                    url: route,
+                    contentType: "application/json",
+                    data: JSON.stringify({
+                        item: itemInInventory,
+                        roomId: currentRoom._id
+                    }),
+                    error: (err) => {
+                        console.log(err);
+                        $("#cmd-container").append(`<div class="error">${err.statusText}</div>`);
+                    },
+                    success: (updatedUser) => {
+                        loadCurrentRoom();
+                        console.log("Tried POST to /:id/move-item-to-room");
+                        console.log(updatedUser);
+                        itemString = updatedUser.items.reduce((prevItem, { name }, index) => { return index === 0 ? `${name}` : `${prevItem}, ${name}` }, "");
+                        $("#items").text(itemString);
+                    }
+                });
+
+                $("#cmd-container").append(`<div class="message">You drop <em>${itemInInventory.name}</em>.</div>`);
+                return;
+            } else {
+                console.log("Input:", `"${item}"`, "Item in inventory:", `"${itemInInventory.name}"`);
+            }
+        }
+        $("#cmd-container").append(`<div class="message">There are no <em>${item}</em> to drop.</div>`);
+        return;
+    }
 }
 
 // Done
