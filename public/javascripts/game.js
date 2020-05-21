@@ -131,7 +131,7 @@ const handleForward = () => {
             if(data.room === undefined)
                 $("#cmd-container").append(`<div class="message">${data.message.forward}</div>`);
             else
-                $("#cmd-container").append(`<div class="message">You move forward into ${data.room}</div>`);
+                $("#cmd-container").append(`<div class="message">You move forward into <em class="data-emphasis">${data.room}</em></div>`);
         }
     });
 }
@@ -160,7 +160,7 @@ const handleBack = () => {
             if(data.room === undefined)
                 $("#cmd-container").append(`<div class="message">${data.message.back}</div>`);
             else
-                $("#cmd-container").append(`<div class="message">You move back into ${data.room}</div>`);
+                $("#cmd-container").append(`<div class="message">You move back into <em class="data-emphasis">${data.room}</em></div>`);
         }
     });
 }
@@ -186,8 +186,8 @@ const handleLook = () => {
         }
     }
     
-    const itemMessage = items === undefined ? `You find no items.` : `You find <em>${items}</em> in the room.`;
-    const enemyMessage = enemies === undefined ? `` : ` However, the room is guarded by <em>${enemies}</em>.`;
+    const itemMessage = items === undefined ? `You find no items.` : `You find <em class="data-emphasis">${items}</em> in the room.`;
+    const enemyMessage = enemies === undefined ? `` : ` However, the room is guarded by <em class="data-emphasis">${enemies}</em>.`;
 
     $("#cmd-container").append(`<div class="message">${itemMessage} ${enemyMessage}</div>`);
 }
@@ -200,7 +200,7 @@ const handlePickup = (item) => {
 
         if(item === "noArgs") {
             console.log(item);
-            $("#cmd-container").append(`<div class="message">To pick up an item write "pickup <em>item</em>"</div>`);
+            $("#cmd-container").append(`<div class="message">To pick up an item write <em class="data-emphasis">pickup item</em></div>`);
 
             return;
         }
@@ -228,18 +228,27 @@ const handlePickup = (item) => {
                         loadCurrentRoom();
                         console.log("Tried POST to /:id/move-item-to-user");
                         console.log(updatedUser);
-                        itemString = updatedUser.items.reduce((prevItem, { name }, index) => { return index === 0 ? `${name}` : `${prevItem}, ${name}` }, "");
+
+                        user = updatedUser;
+
+                        socket.emit("item-pickup", {
+                            user: user.name,
+                            room: currentRoom.name,
+                            item: itemInRoom.name
+                        });
+
+                        itemString = user.items.reduce((prevItem, { name }, index) => { return index === 0 ? `${name}` : `${prevItem}, ${name}` }, "");
                         $("#items").text(itemString);
                     }
                 });
 
-                $("#cmd-container").append(`<div class="message">You pickup <em>${itemInRoom.name}</em>.</div>`);
+                $("#cmd-container").append(`<div class="message">You pickup <em class="data-emphasis">${itemInRoom.name}</em>.</div>`);
                 return;
             } else {
                 console.log("Input:", `"${item}"`, "Item in room:", `"${itemInRoom.name}"`);
             }
         }
-        $("#cmd-container").append(`<div class="message">There are no <em>${item}</em> to pickup.</div>`);
+        $("#cmd-container").append(`<div class="message">There are no <em class="data-emphasis">${item}</em> to pickup.</div>`);
         return;
     }
 }
@@ -256,7 +265,7 @@ const handleDrop = (item) => {
     } else {
 
         if(item === "noArgs") {
-            $("#cmd-container").append(`<div class="message">To drop an item write "drop <em>item</em>"</div>`);
+            $("#cmd-container").append(`<div class="message">To drop an item write <em class="data-emphasis">drop item</em></div>`);
             return;
         }
 
@@ -283,18 +292,28 @@ const handleDrop = (item) => {
                         loadCurrentRoom();
                         console.log("Tried POST to /:id/move-item-to-room");
                         console.log(updatedUser);
-                        itemString = updatedUser.items.reduce((prevItem, { name }, index) => { return index === 0 ? `${name}` : `${prevItem}, ${name}` }, "");
-                        $("#items").text(itemString);
+
+                        user = updatedUser;
+
+                        socket.emit("item-drop", {
+                            user: user.name,
+                            room: currentRoom.name,
+                            item: itemInInventory.name
+                        });
+                        itemString = user.items.reduce((prevItem, { name }, index) => { return index === 0 ? `${name}` : `${prevItem}, ${name}` }, "");
+
+
+                        $("#items").text(user.items.length !== 0 ? itemString : `No items in inventory`);
                     }
                 });
 
-                $("#cmd-container").append(`<div class="message">You drop <em>${itemInInventory.name}</em>.</div>`);
+                $("#cmd-container").append(`<div class="message">You drop <em class="data-emphasis">${itemInInventory.name}</em>.</div>`);
                 return;
             } else {
                 console.log("Input:", `"${item}"`, "Item in inventory:", `"${itemInInventory.name}"`);
             }
         }
-        $("#cmd-container").append(`<div class="message">There are no <em>${item}</em> to drop.</div>`);
+        $("#cmd-container").append(`<div class="message">There are no <em class="data-emphasis">${item}</em> to drop.</div>`);
         return;
     }
 }
@@ -303,7 +322,7 @@ const handleDrop = (item) => {
 const handleHelp = () => {
     let commandString = Object.values(_commands).reduce((prevCommand, command) => { return command === "help" ? `${prevCommand} and ${command}` : `${prevCommand}, ${command}` });
 
-    $("#cmd-container").append(`<div class="message">Available commands: ${commandString}</div>`);
+    $("#cmd-container").append(`<div class="message">Available commands: <em class="data-emphasis">${commandString}</em></div>`);
 }
 
 const handleChat = (message) => {
@@ -362,10 +381,24 @@ const loadUser = () => {
 
 socket.on("announce", (data) => {
     if(data.name === $("#name").text())
-        $("#chat-container").append(`<div class="message"><em>You</em> have joined the game!</div>`);
+        $("#chat-container").append(`<div class="message"><em class="data-emphasis">You</em> have joined the game!</div>`);
     else
-        $("#chat-container").append(`<div class="message"><em>${data.name}</em> has joined the game!</div>`);
+        $("#chat-container").append(`<div class="message"><em class="data-emphasis">${data.name}</em> has joined the game!</div>`);
 });
 socket.on("chat", (data) => {
-    $("#chat-container").append(`<div class="message"><em>${data.name}:</em>   ${data.message}</div>`);
+    $("#chat-container").append(`<div class="message"><em class="data-emphasis">${data.name}:</em>   ${data.message}</div>`);
+});
+
+socket.on("item-drop", (data) => {
+    loadCurrentRoom();
+    if(data.room === currentRoom.name) { // --> display the emitted message to users in the room
+        $("#chat-container").append(`<div class="message"><em class="data-emphasis">${data.user}</em> has dropped <em class="data-emphasis">${data.item}</em> nearby.</div>`);
+    }
+});
+
+socket.on("item-pickup", (data) => {
+    loadCurrentRoom();
+    if(data.room === currentRoom.name) { // --> display the emitted message to users in the room
+        $("#chat-container").append(`<div class="message"><em class="data-emphasis">${data.user}</em> has picked up <em class="data-emphasis">${data.item}</em> nearby.</div>`);
+    }
 });
